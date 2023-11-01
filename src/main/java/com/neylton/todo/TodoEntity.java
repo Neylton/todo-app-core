@@ -19,7 +19,7 @@ public class TodoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "todo_name")
     private String todoName;
@@ -28,7 +28,7 @@ public class TodoEntity {
     private String description;
 
     @Column(name = "priority")
-    private Integer priority;
+    private int priority;
 
     @Column(name = "done")
     private boolean done;
