@@ -1,8 +1,11 @@
 package com.neylton.todo;
 
+import com.neylton.todo.dto.TodoDTO;
+import com.neylton.todo.mapper.Converter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
@@ -13,23 +16,26 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    public List<TodoEntity> list() {
-        return this.todoRepository.findAll();
+    public List<TodoDTO> list() {
+
+        return this.todoRepository.findAll().stream().map(Converter::toTodoDTO).collect(Collectors.toList());
     }
 
-    public TodoEntity findById(long id) {
-        return this.todoRepository.findById(id).orElseThrow(
+    public TodoDTO findById(long id) {
+        TodoEntity todoEntity =  this.todoRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Error: Todo not found.")
         );
+
+        return Converter.toTodoDTO(todoEntity);
     }
 
-    public List<TodoEntity> saveOrUpdate(TodoEntity todoEntity) {
+    public List<TodoDTO> saveOrUpdate(TodoEntity todoEntity) {
         this.todoRepository.save(todoEntity);
         return this.list();
     }
 
-    public List<TodoEntity> delete(long id) {
-        this.todoRepository.delete(this.findById(id));
+    public List<TodoDTO> delete(long id) {
+        this.todoRepository.deleteById(id);
         return this.list();
     }
 }

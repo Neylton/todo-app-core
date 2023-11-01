@@ -1,5 +1,8 @@
 package com.neylton.todo;
 
+import com.neylton.todo.dto.TodoDTO;
+import com.neylton.todo.mapper.Converter;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,22 +24,22 @@ public class TodoController {
     }
 
     @GetMapping
-    public List<TodoEntity> list() {
+    public List<TodoDTO> list() {
         return this.todoService.list();
     }
 
     @GetMapping("/{id}")
-    public TodoEntity findById(@PathVariable long id) {
+    public TodoDTO findById(@PathVariable long id) {
         return this.todoService.findById(id);
     }
 
     @PostMapping
-    public List<TodoEntity> saveOrUpdate(@RequestBody TodoEntity todoEntity) {
-        return this.todoService.saveOrUpdate(todoEntity);
+    public List<TodoDTO> saveOrUpdate(@Valid @RequestBody TodoDTO todo) {
+        return this.todoService.saveOrUpdate(Converter.ToTodoEntity(todo));
     }
 
     @DeleteMapping("/{id}")
-    public List<TodoEntity> delete(@PathVariable long id) {
+    public List<TodoDTO> delete(@PathVariable long id) {
         return this.todoService.delete(id);
     }
 }
