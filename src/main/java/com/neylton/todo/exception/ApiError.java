@@ -3,7 +3,9 @@ package com.neylton.todo.exception;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -26,11 +28,12 @@ public class ApiError {
         this.path = path;
     }
 
-    public ApiError(HttpStatus status, String message, String path) {
+    public ApiError(HttpStatus status, String message, String error,  String path) {
         this.timestamp = LocalDateTime.now();
         this.code = status.value();
         this.status = status;
         this.message = message;
+        this.errors = Collections.singletonList(error);
         this.path = path;
     }
 

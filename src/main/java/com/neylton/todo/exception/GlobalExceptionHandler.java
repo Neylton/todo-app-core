@@ -20,7 +20,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { IllegalArgumentException.class })
     protected ResponseEntity<Object> handleNotFoundException(IllegalArgumentException ex, WebRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getDescription(false));
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), "Not found", request.getDescription(false));
         return handleExceptionInternal(ex, apiError, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
 
         final ApiError apiError = new ApiError(
-                HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors, request.getDescription(true)
+                HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors, request.getDescription(false)
         );
 
         return handleExceptionInternal(ex, apiError, headers, apiError.getStatus(), request);
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
         final ApiError apiError = new ApiError(
-                HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), request.getDescription(false)
+                HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), "Internal server error", request.getDescription(false)
         );
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
