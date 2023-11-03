@@ -2,6 +2,8 @@ package com.neylton.todo;
 
 import com.neylton.todo.dto.TodoDTO;
 import com.neylton.todo.mapper.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +19,6 @@ public class TodoService {
     }
 
     public List<TodoDTO> list() {
-
         return this.todoRepository.findAll().stream().map(Converter::toTodoDTO).collect(Collectors.toList());
     }
 
@@ -25,17 +26,19 @@ public class TodoService {
         TodoEntity todoEntity =  this.todoRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Error: Todo not found.")
         );
-
         return Converter.toTodoDTO(todoEntity);
     }
 
-    public List<TodoDTO> saveOrUpdate(TodoEntity todoEntity) {
-        this.todoRepository.save(todoEntity);
-        return this.list();
+    public TodoDTO saveOrUpdate(TodoEntity todoEntity) {
+        TodoEntity todo = this.todoRepository.save(todoEntity);
+        return Converter.toTodoDTO(todo);
     }
 
-    public List<TodoDTO> delete(long id) {
+    public void delete(long id) {
         this.todoRepository.deleteById(id);
-        return this.list();
+    }
+
+    public Page<TodoDTO> findByTodoName(String todoName, PageRequest pageRequest) {
+        return this.todoRepository.findByTodoNameContainingIgnoreCase(todoName, pageRequest).map(Converter::toTodoDTO);
     }
 }
