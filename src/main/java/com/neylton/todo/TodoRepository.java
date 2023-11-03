@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 
     Page<TodoEntity> findByTodoNameContainingIgnoreCase(String todoName, Pageable pageable);
-    
+
 }
